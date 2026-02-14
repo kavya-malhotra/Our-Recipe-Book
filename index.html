@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Recipe Book</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        :root {
+            --beige-light: #f5f0e8;
+            --beige-medium: #e8dcc8;
+            --beige-dark: #d4c4a8;
+            --tan: #c4a57b;
+            --brown: #8b6f47;
+            --dark-brown: #6b5638;
+            --white: #ffffff;
+            --text-primary: #4a3f2e;
+            --text-secondary: #8b7355;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.12);
+            --shadow-strong: rgba(0, 0, 0, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #e8dcc8 0%, #f5ebe0 50%, #e8dcc8 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        #root {
+            min-height: 100vh;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: var(--white);
+            padding: 3rem 3rem 2.5rem 3rem;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px var(--shadow-medium);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .heart-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: grayscale(30%) sepia(20%) hue-rotate(10deg);
+        }
+
+        .logo {
+            font-family: 'Caveat', cursive;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--brown);
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+        }
+
+        .login-form {
+            text-align: left;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #e0d4c0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .input-group input::placeholder {
+            color: #b8a590;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--tan);
+            box-shadow: 0 0 0 3px rgba(196, 165, 123, 0.15);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            background: var(--tan);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(196, 165, 123, 0.25);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background: var(--brown);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 165, 123, 0.35);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .made-with-love {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .main-header {
+            background: var(--beige-dark);
+            padding: 1.25rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-heart {
+            font-size: 1.5rem;
+            filter: grayscale(30%) sepia(20%) hue-rotate(10deg);
+        }
+
+        .main-title {
+            font-family: 'Caveat', cursive;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark-brown);
+        }
+
+        .btn-logout {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            color: var(--dark-brown);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .logout-icon {
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .hero-section {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 20px var(--shadow-light);
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 3rem;
+            align-items: center;
+            animation: fadeIn 0.6s ease-out 0.2s both;
+        }
+
+        .hero-content {
+            padding-right: 2rem;
+        }
+
+        .hero-title {
+            font-family: 'Caveat', cursive;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-text {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .hero-photo {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px var(--shadow-medium);
+        }
+
+        .hero-photo img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-upload-btn {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .photo-upload-btn:hover {
+            transform: scale(1.1);
+            background: var(--white);
+        }
+
+        .recipes-section {
+            animation: fadeIn 0.6s ease-out 0.4s both;
+        }
+
+        .recipes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .search-filters {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 12px var(--shadow-light);
+        }
+
+        .search-bar {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            border: 1px solid #e0d4c0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input::placeholder {
+            color: #b8a590;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--tan);
+            box-shadow: 0 0 0 3px rgba(196, 165, 123, 0.15);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filter-select {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            border: 1px solid #e0d4c0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--tan);
+            box-shadow: 0 0 0 3px rgba(196, 165, 123, 0.15);
+        }
+
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .recipe-card {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px var(--shadow-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px var(--shadow-medium);
+        }
+
+        .recipe-card-image-container {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+            background: var(--beige-light);
+        }
+
+        .recipe-card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .recipe-card:hover .recipe-card-image {
+            transform: scale(1.05);
+        }
+
+        .youtube-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: #ff0000;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .recipe-card-content {
+            padding: 1.5rem;
+        }
+
+        .recipe-card-title {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .recipe-card-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .recipe-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .recipe-card-info {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .recipe-card-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--beige-light);
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 0.625rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: var(--beige-light);
+            color: var(--dark-brown);
+        }
+
+        .btn-edit:hover {
+            background: var(--beige-medium);
+        }
+
+        .btn-delete {
+            background: var(--tan);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: var(--brown);
+        }
+
+        .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--brown);
+            border: 2px solid var(--brown);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            background: var(--beige-light);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 20px;
+            max-width: 650px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: scaleIn 0.3s ease-out;
+            position: relative;
+            padding: 2.5rem;
+        }
+
+        .modal-content-large {
+            max-width: 900px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            background: var(--beige-light);
+            color: var(--text-primary);
+        }
+
+        .modal-title {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #e0d4c0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            resize: vertical;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #b8a590;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--tan);
+            box-shadow: 0 0 0 3px rgba(196, 165, 123, 0.15);
+        }
+
+        .dynamic-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dynamic-input-group input {
+            flex: 1;
+        }
+
+        .btn-remove {
+            padding: 0.875rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid #e0d4c0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            width: 44px;
+        }
+
+        .btn-remove:hover {
+            background: #ffebee;
+            color: #c62828;
+            border-color: #c62828;
+        }
+
+        .btn-add-field {
+            padding: 0.625rem 1rem;
+            background: transparent;
+            color: var(--brown);
+            border: 1px dashed var(--tan);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-add-field:hover {
+            background: var(--beige-light);
+            border-style: solid;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--beige-light);
+        }
+
+        .recipe-detail-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .recipe-detail-title {
+            font-family: 'Caveat', cursive;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .recipe-detail-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .recipe-detail-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+
+        .recipe-video {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border-radius: 16px;
+        }
+
+        .recipe-video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+        }
+
+        .recipe-section {
+            margin-bottom: 2rem;
+        }
+
+        .recipe-section-title {
+            font-family: 'Caveat', cursive;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--tan);
+        }
+
+        .recipe-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recipe-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--beige-light);
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .recipe-list li:before {
+            content: "♥";
+            position: absolute;
+            left: 0;
+            color: var(--tan);
+            font-size: 1.2rem;
+        }
+
+        .recipe-list.method {
+            counter-reset: step;
+        }
+
+        .recipe-list.method li {
+            counter-increment: step;
+        }
+
+        .recipe-list.method li:before {
+            content: counter(step);
+            background: var(--tan);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .recipe-notes {
+            background: var(--beige-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--tan);
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 1.25rem;
+            font-family: 'Caveat', cursive;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .hero-content {
+                padding-right: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 2rem 1rem; }
+            .hero-section { padding: 2rem; }
+            .hero-title { font-size: 2rem; }
+            .main-title { font-size: 1.5rem; }
+            .recipes-grid { grid-template-columns: 1fr; }
+            .modal-content { padding: 2rem 1.5rem; }
+            .recipe-detail-title { font-size: 2rem; }
+            .filters { flex-direction: column; }
+            .form-row { grid-template-columns: 1fr; }
+            .recipes-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-card { padding: 2rem 1.5rem; }
+            .logo { font-size: 2rem; }
+            .hero-photo img { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const CONFIG = {
+            PASSWORD: 'cookbook',
+            STORAGE_KEY: 'recipeBookData',
+            PHOTO_KEY: 'couplePhoto'
+        };
+
+        const extractYouTubeId = (url) => {
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+                /^([a-zA-Z0-9_-]{11})$/
+            ];
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return null;
+        };
+
+        const LoginPage = ({ onLogin }) => {
+            const [password, setPassword] = useState('');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (password === CONFIG.PASSWORD) {
+                    onLogin();
+                } else {
+                    alert('Incorrect password! Try again 💔');
+                    setPassword('');
+                }
+            };
+
+            return (
+                <div className="login-container">
+                    <div className="login-card">
+                        <div className="heart-icon">❤️</div>
+                        <h1 className="logo">Our Recipe Book</h1>
+                        <p className="tagline">A culinary journey together</p>
+                        <form className="login-form" onSubmit={handleSubmit}>
+                            <div className="input-group">
+                                <label htmlFor="password">Enter Password</label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    placeholder="Our secret password..."
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <button type="submit" className="btn-primary">
+                                Enter Our Kitchen
+                            </button>
+                            <p className="made-with-love">❤️ Made with love ❤️</p>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        const RecipeCard = ({ recipe, onView, onEdit, onDelete }) => {
+            const mainImage = recipe.images && recipe.images.length > 0 ? recipe.images[0] : '';
+
+            return (
+                <div className="recipe-card" onClick={() => onView(recipe)}>
+                    <div className="recipe-card-image-container">
+                        {mainImage && (
+                            <img
+                                src={mainImage}
+                                alt={recipe.name}
+                                className="recipe-card-image"
+                                onError={(e) => e.target.style.display = 'none'}
+                            />
+                        )}
+                        {recipe.youtubeLink && <div className="youtube-badge">▶</div>}
+                    </div>
+                    <div className="recipe-card-content">
+                        <h3 className="recipe-card-title">{recipe.name}</h3>
+                        <div className="recipe-card-meta">
+                            {recipe.cookTime && (
+                                <div className="recipe-meta-item">
+                                    <span className="recipe-meta-icon">⏱</span> {recipe.cookTime}
+                                </div>
+                            )}
+                            {recipe.servings && (
+                                <div className="recipe-meta-item">
+                                    <span className="recipe-meta-icon">🍽</span> {recipe.servings}
+                                </div>
+                            )}
+                        </div>
+                        <div className="recipe-card-info">
+                            {recipe.ingredients.length} ingredients · {recipe.method.length} steps
+                        </div>
+                        <div className="recipe-card-actions" onClick={(e) => e.stopPropagation()}>
+                            <button className="btn-small btn-edit" onClick={() => onEdit(recipe)}>
+                                Edit
+                            </button>
+                            <button className="btn-small btn-delete" onClick={() => onDelete(recipe.id)}>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const RecipeModal = ({ recipe, onClose, onSave }) => {
+            const [formData, setFormData] = useState({
+                name: '',
+                cookTime: '',
+                servings: '',
+                type: '',
+                youtubeLink: '',
+                images: [''],
+                ingredients: [''],
+                method: '',
+                notes: ''
+            });
+
+            useEffect(() => {
+                if (recipe) {
+                    setFormData({
+                        name: recipe.name || '',
+                        cookTime: recipe.cookTime || '',
+                        servings: recipe.servings || '',
+                        type: recipe.type || '',
+                        youtubeLink: recipe.youtubeLink || '',
+                        images: recipe.images && recipe.images.length > 0 ? recipe.images : [''],
+                        ingredients: recipe.ingredients && recipe.ingredients.length > 0 ? recipe.ingredients : [''],
+                        method: recipe.method ? recipe.method.join('\n') : '',
+                        notes: recipe.notes || ''
+                    });
+                }
+            }, [recipe]);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const method = formData.method.split('\n').map(m => m.trim()).filter(m => m.length > 0);
+                const images = formData.images.filter(img => img.trim().length > 0);
+                const ingredients = formData.ingredients.filter(ing => ing.trim().length > 0);
+
+                onSave({
+                    ...formData,
+                    images,
+                    ingredients,
+                    method
+                });
+            };
+
+            const addImage = () => {
+                setFormData({ ...formData, images: [...formData.images, ''] });
+            };
+
+            const removeImage = (index) => {
+                setFormData({
+                    ...formData,
+                    images: formData.images.filter((_, i) => i !== index)
+                });
+            };
+
+            const updateImage = (index, value) => {
+                const newImages = [...formData.images];
+                newImages[index] = value;
+                setFormData({ ...formData, images: newImages });
+            };
+
+            const addIngredient = () => {
+                setFormData({ ...formData, ingredients: [...formData.ingredients, ''] });
+            };
+
+            const removeIngredient = (index) => {
+                setFormData({
+                    ...formData,
+                    ingredients: formData.ingredients.filter((_, i) => i !== index)
+                });
+            };
+
+            const updateIngredient = (index, value) => {
+                const newIngredients = [...formData.ingredients];
+                newIngredients[index] = value;
+                setFormData({ ...formData, ingredients: newIngredients });
+            };
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <button className="close-btn" onClick={onClose}>×</button>
+                        <h2 className="modal-title">{recipe ? 'Edit Recipe' : 'Add New Recipe'}</h2>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label>Recipe Title *</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g., Grandma's Chocolate Chip Cookies"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label>Cook Time</label>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g., 30 mins"
+                                        value={formData.cookTime}
+                                        onChange={(e) => setFormData({ ...formData, cookTime: e.target.value })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Servings</label>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g., 4 servings"
+                                        value={formData.servings}
+                                        onChange={(e) => setFormData({ ...formData, servings: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Recipe Type</label>
+                                <select
+                                    value={formData.type}
+                                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                                >
+                                    <option value="">Select type...</option>
+                                    <option value="breakfast">Breakfast</option>
+                                    <option value="lunch">Lunch</option>
+                                    <option value="dinner">Dinner</option>
+                                    <option value="dessert">Dessert</option>
+                                    <option value="snack">Snack</option>
+                                </select>
+                            </div>
+
+                            <div className="form-group">
+                                <label>🎬 YouTube Video URL (optional)</label>
+                                <input
+                                    type="url"
+                                    placeholder="https://youtube.com/watch?v=..."
+                                    value={formData.youtubeLink}
+                                    onChange={(e) => setFormData({ ...formData, youtubeLink: e.target.value })}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>📷 Recipe Images (URLs)</label>
+                                {formData.images.map((img, index) => (
+                                    <div key={index} className="dynamic-input-group">
+                                        <input
+                                            type="url"
+                                            placeholder="https://example.com/image.jpg"
+                                            value={img}
+                                            onChange={(e) => updateImage(index, e.target.value)}
+                                        />
+                                        {formData.images.length > 1 && (
+                                            <button
+                                                type="button"
+                                                className="btn-remove"
+                                                onClick={() => removeImage(index)}
+                                            >
+                                                ×
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
+                                <button type="button" className="btn-add-field" onClick={addImage}>
+                                    + Add Another Image
+                                </button>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Ingredients *</label>
+                                {formData.ingredients.map((ing, index) => (
+                                    <div key={index} className="dynamic-input-group">
+                                        <input
+                                            type="text"
+                                            placeholder={`Ingredient ${index + 1}`}
+                                            value={ing}
+                                            onChange={(e) => updateIngredient(index, e.target.value)}
+                                        />
+                                        {formData.ingredients.length > 1 && (
+                                            <button
+                                                type="button"
+                                                className="btn-remove"
+                                                onClick={() => removeIngredient(index)}
+                                            >
+                                                ×
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
+                                <button type="button" className="btn-add-field" onClick={addIngredient}>
+                                    + Add Ingredient
+                                </button>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Method * (one step per line)</label>
+                                <textarea
+                                    rows="8"
+                                    placeholder="Step 1: Preheat oven to 350°F&#10;Step 2: Mix dry ingredients&#10;Step 3: Add wet ingredients..."
+                                    value={formData.method}
+                                    onChange={(e) => setFormData({ ...formData, method: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Notes (optional)</label>
+                                <textarea
+                                    rows="3"
+                                    placeholder="Special tips, variations, or memories..."
+                                    value={formData.notes}
+                                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                                />
+                            </div>
+
+                            <div className="form-actions">
+                                <button type="button" className="btn-secondary" onClick={onClose}>
+                                    Cancel
+                                </button>
+                                <button type="submit" className="btn-primary">
+                                    Save Recipe
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        const RecipeViewModal = ({ recipe, onClose }) => {
+            if (!recipe) return null;
+
+            const videoId = recipe.youtubeLink ? extractYouTubeId(recipe.youtubeLink) : null;
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content modal-content-large" onClick={(e) => e.stopPropagation()}>
+                        <button className="close-btn" onClick={onClose}>×</button>
+                        <div className="recipe-detail-header">
+                            <h1 className="recipe-detail-title">{recipe.name}</h1>
+                            <div className="recipe-detail-meta">
+                                {recipe.cookTime && <span>⏱ {recipe.cookTime}</span>}
+                                {recipe.servings && <span>🍽 {recipe.servings}</span>}
+                            </div>
+                        </div>
+
+                        {recipe.images && recipe.images.map((img, index) => (
+                            <img
+                                key={index}
+                                src={img}
+                                alt={recipe.name}
+                                className="recipe-detail-image"
+                                onError={(e) => e.target.style.display = 'none'}
+                            />
+                        ))}
+
+                        {videoId && (
+                            <div className="recipe-video">
+                                <iframe
+                                    src={`https://www.youtube.com/embed/${videoId}`}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            </div>
+                        )}
+
+                        <div className="recipe-section">
+                            <h2 className="recipe-section-title">Ingredients</h2>
+                            <ul className="recipe-list">
+                                {recipe.ingredients.map((ing, index) => (
+                                    <li key={index}>{ing}</li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div className="recipe-section">
+                            <h2 className="recipe-section-title">Method</h2>
+                            <ol className="recipe-list method">
+                                {recipe.method.map((step, index) => (
+                                    <li key={index}>{step}</li>
+                                ))}
+                            </ol>
+                        </div>
+
+                        {recipe.notes && (
+                            <div className="recipe-section">
+                                <h2 className="recipe-section-title">Notes</h2>
+                                <div className="recipe-notes">{recipe.notes}</div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+            const [recipes, setRecipes] = useState([]);
+            const [couplePhoto, setCouplePhoto] = useState('https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=600&fit=crop');
+            const [searchTerm, setSearchTerm] = useState('');
+            const [timeFilter, setTimeFilter] = useState('');
+            const [typeFilter, setTypeFilter] = useState('');
+            const [showRecipeModal, setShowRecipeModal] = useState(false);
+            const [showViewModal, setShowViewModal] = useState(false);
+            const [editingRecipe, setEditingRecipe] = useState(null);
+            const [viewingRecipe, setViewingRecipe] = useState(null);
+            const fileInputRef = useRef(null);
+
+            useEffect(() => {
+                const savedRecipes = localStorage.getItem(CONFIG.STORAGE_KEY);
+                if (savedRecipes) {
+                    try {
+                        setRecipes(JSON.parse(savedRecipes));
+                    } catch (e) {
+                        console.error('Error loading recipes:', e);
+                    }
+                }
+
+                const savedPhoto = localStorage.getItem(CONFIG.PHOTO_KEY);
+                if (savedPhoto) {
+                    setCouplePhoto(savedPhoto);
+                }
+
+                const auth = sessionStorage.getItem('authenticated');
+                if (auth === 'true') {
+                    setIsAuthenticated(true);
+                }
+            }, []);
+
+            useEffect(() => {
+                if (recipes.length > 0) {
+                    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(recipes));
+                }
+            }, [recipes]);
+
+            const handleLogin = () => {
+                sessionStorage.setItem('authenticated', 'true');
+                setIsAuthenticated(true);
+            };
+
+            const handleLogout = () => {
+                sessionStorage.removeItem('authenticated');
+                setIsAuthenticated(false);
+            };
+
+            const handlePhotoUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const imageData = event.target.result;
+                        setCouplePhoto(imageData);
+                        localStorage.setItem(CONFIG.PHOTO_KEY, imageData);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const handleSaveRecipe = (recipeData) => {
+                if (editingRecipe) {
+                    setRecipes(recipes.map(r =>
+                        r.id === editingRecipe.id
+                            ? { ...recipeData, id: editingRecipe.id, createdAt: editingRecipe.createdAt }
+                            : r
+                    ));
+                } else {
+                    const newRecipe = {
+                        ...recipeData,
+                        id: Date.now().toString(),
+                        createdAt: Date.now()
+                    };
+                    setRecipes([...recipes, newRecipe]);
+                }
+                setShowRecipeModal(false);
+                setEditingRecipe(null);
+            };
+
+            const handleDeleteRecipe = (id) => {
+                if (confirm('Are you sure you want to delete this recipe? 🥺')) {
+                    setRecipes(recipes.filter(r => r.id !== id));
+                }
+            };
+
+            const handleEditRecipe = (recipe) => {
+                setEditingRecipe(recipe);
+                setShowRecipeModal(true);
+            };
+
+            const handleViewRecipe = (recipe) => {
+                setViewingRecipe(recipe);
+                setShowViewModal(true);
+            };
+
+            const handleAddRecipe = () => {
+                setEditingRecipe(null);
+                setShowRecipeModal(true);
+            };
+
+            const filteredRecipes = recipes.filter(recipe => {
+                const matchesSearch = !searchTerm ||
+                    recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    recipe.ingredients.some(ing => ing.toLowerCase().includes(searchTerm.toLowerCase()));
+
+                let matchesTime = true;
+                if (timeFilter && recipe.cookTime) {
+                    const cookTime = recipe.cookTime.toLowerCase();
+                    const minutes = parseInt(cookTime);
+                    if (!isNaN(minutes)) {
+                        switch (timeFilter) {
+                            case 'quick':
+                                matchesTime = minutes < 30;
+                                break;
+                            case 'medium':
+                                matchesTime = minutes >= 30 && minutes <= 60;
+                                break;
+                            case 'long':
+                                matchesTime = minutes > 60;
+                                break;
+                        }
+                    }
+                }
+
+                const matchesType = !typeFilter || recipe.type === typeFilter;
+
+                return matchesSearch && matchesTime && matchesType;
+            });
+
+            const sortedRecipes = [...filteredRecipes].sort((a, b) => b.createdAt - a.createdAt);
+
+            if (!isAuthenticated) {
+                return <LoginPage onLogin={handleLogin} />;
+            }
+
+            return (
+                <>
+                    <header className="main-header">
+                        <div className="header-content">
+                            <div className="header-left">
+                                <span className="header-heart">❤️</span>
+                                <h1 className="main-title">Our Recipe Book</h1>
+                            </div>
+                            <button className="btn-logout" onClick={handleLogout}>
+                                <span className="logout-icon">↗</span> Logout
+                            </button>
+                        </div>
+                    </header>
+
+                    <div className="container">
+                        <div className="hero-section">
+                            <div className="hero-content">
+                                <h2 className="hero-title">Cooking Up Memories Together</h2>
+                                <p className="hero-text">
+                                    Welcome to our special place where we collect all the recipes we love, create,
+                                    and share together. Every dish tells a story of our journey.
+                                </p>
+                                <button className="btn-primary" onClick={handleAddRecipe}>
+                                    + Add New Recipe
+                                </button>
+                            </div>
+                            <div className="hero-photo">
+                                <img src={couplePhoto} alt="Our photo" />
+                                <button
+                                    className="photo-upload-btn"
+                                    onClick={() => fileInputRef.current.click()}
+                                >
+                                    📷
+                                </button>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                    onChange={handlePhotoUpload}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="recipes-section">
+                            <div className="recipes-header">
+                                <h2 className="section-title">Our Recipes</h2>
+                            </div>
+
+                            <div className="search-filters">
+                                <div className="search-bar">
+                                    <span className="search-icon">🔍</span>
+                                    <input
+                                        type="text"
+                                        placeholder="Search recipes or ingredients..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                </div>
+                                <div className="filters">
+                                    <select
+                                        className="filter-select"
+                                        value={timeFilter}
+                                        onChange={(e) => setTimeFilter(e.target.value)}
+                                    >
+                                        <option value="">All</option>
+                                        <option value="quick">Quick (&lt; 30 mins)</option>
+                                        <option value="medium">Medium (30-60 mins)</option>
+                                        <option value="long">Long (&gt; 60 mins)</option>
+                                    </select>
+                                    <select
+                                        className="filter-select"
+                                        value={typeFilter}
+                                        onChange={(e) => setTypeFilter(e.target.value)}
+                                    >
+                                        <option value="">All</option>
+                                        <option value="breakfast">Breakfast</option>
+                                        <option value="lunch">Lunch</option>
+                                        <option value="dinner">Dinner</option>
+                                        <option value="dessert">Dessert</option>
+                                        <option value="snack">Snack</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="recipes-grid">
+                                {sortedRecipes.length === 0 ? (
+                                    <div className="empty-state">
+                                        <div className="empty-state-icon">📖</div>
+                                        <p className="empty-state-text">
+                                            {recipes.length === 0
+                                                ? 'No recipes yet! Add your first recipe to get started ♥'
+                                                : 'No recipes found! Try different filters.'}
+                                        </p>
+                                    </div>
+                                ) : (
+                                    sortedRecipes.map((recipe) => (
+                                        <RecipeCard
+                                            key={recipe.id}
+                                            recipe={recipe}
+                                            onView={handleViewRecipe}
+                                            onEdit={handleEditRecipe}
+                                            onDelete={handleDeleteRecipe}
+                                        />
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {showRecipeModal && (
+                        <RecipeModal
+                            recipe={editingRecipe}
+                            onClose={() => {
+                                setShowRecipeModal(false);
+                                setEditingRecipe(null);
+                            }}
+                            onSave={handleSaveRecipe}
+                        />
+                    )}
+
+                    {showViewModal && (
+                        <RecipeViewModal
+                            recipe={viewingRecipe}
+                            onClose={() => {
+                                setShowViewModal(false);
+                                setViewingRecipe(null);
+                            }}
+                        />
+                    )}
+                </>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
